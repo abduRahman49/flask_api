@@ -1,12 +1,14 @@
 import json
 from flask import Flask, render_template
 from models import db
+from migrations import migrate
 
 
 # création de l'application depuis la classe Flask
 app = Flask(__name__)
 app.config.from_file('./config.json', load=json.load)
 db.init_app(app)
+migrate.init_app(app, db)
 
 # définition de la route de base /
 @app.route("/")
