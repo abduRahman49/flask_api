@@ -1,0 +1,5 @@
+{
+    "SQLALCHEMY_DATABASE_URI": "sqlite:///example.sqlite",
+    "SQLALCHEMY_TRACK_MODIFICATIONS": false,
+    "DEBUG": true
+}
