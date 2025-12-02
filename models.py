@@ -31,7 +31,7 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     password : Mapped[str] = mapped_column(String)
 
-    groups: Mapped[list["Groupe"]] = relationship(secondary=users_groups, back_populates="users")
+    groupes: Mapped[list["Groupe"]] = relationship(secondary=users_groups, back_populates="users")
 
     taches: Mapped[list["Tache"]] = relationship(back_populates="user")
 
@@ -56,22 +56,22 @@ class ListeTache(db.Model):
 
     taches: Mapped[list["Tache"]] = relationship(back_populates="liste_tache")
 
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)
     user: Mapped["User"] = relationship(back_populates="listes_taches")
 
-    groupe_id: Mapped[int] = mapped_column(ForeignKey('groupes.id'), primary_key=True)
+    groupe_id: Mapped[int] = mapped_column(ForeignKey('groupes.id'), nullable=True)
     groupe: Mapped["Groupe"] = relationship(back_populates="listes_taches")
 
 
 class Tache(db.Model):
     __tablename__= "taches"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     libelle: Mapped[str] = mapped_column(String(100))
     description : Mapped[str] = mapped_column(Text)
     etat: Mapped[Etat] = mapped_column(Enum(Etat))
 
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)
     user: Mapped["User"] = relationship(back_populates="taches")
 
-    liste_tache_id: Mapped[int] = mapped_column(ForeignKey('liste_taches.id'), primary_key=True)
+    liste_tache_id: Mapped[int] = mapped_column(ForeignKey('liste_taches.id'), nullable=True)
     liste_tache: Mapped["ListeTache"] = relationship(back_populates="taches")

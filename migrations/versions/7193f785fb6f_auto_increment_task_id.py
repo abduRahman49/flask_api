@@ -1,8 +1,8 @@
-"""initialisation
+"""auto increment task id
 
-Revision ID: 1d6c2d02107c
+Revision ID: 7193f785fb6f
 Revises: 
-Create Date: 2025-12-02 18:41:48.994806
+Create Date: 2025-12-02 20:28:27.159311
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1d6c2d02107c'
+revision = '7193f785fb6f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,11 +37,11 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('libelle', sa.String(length=100), nullable=False),
     sa.Column('description', sa.Text(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('groupe_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('groupe_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['groupe_id'], ['groupes.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id', 'user_id', 'groupe_id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users_groups',
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -51,15 +51,15 @@ def upgrade():
     sa.PrimaryKeyConstraint('user_id', 'groupe_id')
     )
     op.create_table('taches',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('libelle', sa.String(length=100), nullable=False),
     sa.Column('description', sa.Text(), nullable=False),
     sa.Column('etat', sa.Enum('EN_COURS', 'TERMINEE', 'ARCHIVEE', name='etat'), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('liste_tache_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('liste_tache_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['liste_tache_id'], ['liste_taches.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id', 'user_id', 'liste_tache_id')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 
