@@ -2,13 +2,39 @@ import json
 from flask import Flask, render_template
 from models import db
 from migrations import migrate
+from schemas import ma
+from marshmallow.exceptions import ValidationError
+from marshmallow import fields
 
 
 # création de l'application depuis la classe Flask
 app = Flask(__name__)
 app.config.from_file('./config.json', load=json.load)
+# initialisation des extensions
 db.init_app(app)
 migrate.init_app(app, db)
+ma.init_app(app)
+
+
+def is_isi_email(value: str):
+    if not value.endswith("@isi.com"):
+        raise ValidationError("Cette adresse n'est pas une adresse de ISI")
+
+# Schémas
+class UserInSchema(ma.Schema):
+    nom = fields.Str(required=True)
+    prenom = fields.Str(required=True)
+    email = fields.Email(required=True, validate=is_isi_email)
+    password = fields.Str(required=True)
+
+
+# Représentation
+class UserOutSchema(ma.Schema):
+    id = fields.Int()
+    nom = fields.Str()
+    prenom = fields.Str()
+    email = fields.Email()
+
 
 # définition de la route de base /
 @app.route("/")
