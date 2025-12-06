@@ -20,7 +20,7 @@ def is_isi_email(value: str):
     if not value.endswith("@isi.com"):
         raise ValidationError("Cette adresse n'est pas une adresse de ISI")
 
-# Schémas
+# Schéma d'entrée : Données utilisateur
 class UserInSchema(ma.Schema):
     nom = fields.Str(required=True)
     prenom = fields.Str(required=True)
@@ -28,7 +28,7 @@ class UserInSchema(ma.Schema):
     password = fields.Str(required=True)
 
 
-# Représentation
+# Schéma de sortie : Représentation de la ressource utilisateur
 class UserOutSchema(ma.Schema):
     id = fields.Int()
     nom = fields.Str()
