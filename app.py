@@ -1,6 +1,6 @@
 import json
-from flask import Flask, render_template
-from models import db
+from flask import Flask, render_template, request
+from models import db, Tache
 from migrations import migrate
 from schemas import ma
 from marshmallow.exceptions import ValidationError
@@ -40,6 +40,25 @@ class UserOutSchema(ma.Schema):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/contact")
+def contact():
+    return "Ceci est ma page de contact"
+
+@app.route("/users/<int:user_id>")
+def display_user(user_id):
+    return f"Ceci est l'identifiant de l'utilisateur {user_id}"
+
+@app.route('/taches', methods=["GET", "POST"])
+def tasks():
+    if request.method == "GET":
+        # traitement pour récupérer toutes les taches
+        taches = db.session.execute(db.select(Tache)).scalars().all()
+    
+    if request.method == "POST":
+        # traitement pour créer une nouvelle tâche
+        pass
+
 
 # elle vérifie si l'application est lancée en tant que module / script
 if __name__ == '__main__':
