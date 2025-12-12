@@ -33,7 +33,7 @@ class User(db.Model):
 
     groupes: Mapped[list["Groupe"]] = relationship(secondary=users_groups, back_populates="users")
 
-    taches: Mapped[list["Tache"]] = relationship(back_populates="affected_user")
+    taches: Mapped[list["Tache"]] = relationship(back_populates="user")
 
     listes_taches: Mapped[list["ListeTache"]] = relationship(back_populates="user")
 
@@ -72,7 +72,7 @@ class Tache(db.Model):
     priorite: Mapped[int] = mapped_column(Integer, nullable=True)
 
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)
-    affected_user: Mapped["User"] = relationship(back_populates="taches")
+    user: Mapped["User"] = relationship(back_populates="taches")
 
     liste_tache_id: Mapped[int] = mapped_column(ForeignKey('liste_taches.id'), nullable=True)
     liste_tache: Mapped["ListeTache"] = relationship(back_populates="taches")
