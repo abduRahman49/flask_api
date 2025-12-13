@@ -1,9 +1,12 @@
 import json
-from flask import Flask, render_template, request
-from models import db, Tache
+from flask import Flask, render_template, request, jsonify
+from models import db, User
 from migrations import migrate
 from schemas import ma
+# erreurs de validation (données client)
 from marshmallow.exceptions import ValidationError
+# erreur base de données (contrainte d'intégrité)
+from sqlalchemy.exc import IntegrityError
 from marshmallow import fields
 
 
@@ -45,19 +48,32 @@ def index():
 def contact():
     return "Ceci est ma page de contact"
 
-@app.route("/users/<int:user_id>")
-def display_user(user_id):
-    return f"Ceci est l'identifiant de l'utilisateur {user_id}"
+# Endpoint permettant de créer un utilisateur
+@app.route('/users', methods=['POST'])
+def create_user():
+    # récupère les informations de l'utilisateur
+    data = request.json
 
-@app.route('/taches', methods=["GET", "POST"])
-def tasks():
-    if request.method == "GET":
-        # traitement pour récupérer toutes les taches
-        taches = db.session.execute(db.select(Tache)).scalars().all()
+    # initialisation du schéma d'entrée (pour validation)
+    user_in_schema = UserInSchema()
+    # vérification des données par rapport aux contraintes définies sur le schéma
+    try:
+        validated_data = user_in_schema.load(data)
+    except ValidationError as e:
+        return jsonify({"erreur": f"L'erreur suivante s'est produite {e}"}), 400
     
-    if request.method == "POST":
-        # traitement pour créer une nouvelle tâche
-        pass
+    # création de l'objet
+    user = User(**validated_data)
+    # persistance de l'objet en base
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError as e:
+        return jsonify({"erreur": f"Ce compte existe déjà"}), 409
+
+    # initialisation du schéma de sortie (pour représentation)
+    user_out_schema = UserOutSchema()
+    return user_out_schema.dump(user), 201
 
 
 # elle vérifie si l'application est lancée en tant que module / script
