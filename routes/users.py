@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, abort
-from models import db, User, Tache
-from schemas import UserInSchema, UserOutSchema, TacheInSchema, TacheOutSchema
+from extensions.models import db, User, Tache
+from extensions.schemas import UserInSchema, UserOutSchema, TacheInSchema, TacheOutSchema
 from marshmallow.exceptions import ValidationError
 from sqlalchemy.exc import IntegrityError, NoResultFound
 

@@ -1,8 +1,8 @@
 import json
 from flask import Flask, render_template, jsonify
-from models import db
-from migrations import migrate
-from schemas import ma
+from extensions.models import db
+from extensions.migrations import migrate
+from extensions.schemas import ma
 from routes.users import users_bp
 from routes.taches import taches_bp
 
