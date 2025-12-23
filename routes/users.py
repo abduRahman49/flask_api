@@ -3,6 +3,7 @@ from extensions.models import db, User, Tache
 from extensions.schemas import UserInSchema, UserOutSchema, TacheInSchema, TacheOutSchema
 from marshmallow.exceptions import ValidationError
 from sqlalchemy.exc import IntegrityError, NoResultFound
+from consume_apis import get_quote_of_the_day
 
 
 users_bp = Blueprint('users', __name__)
